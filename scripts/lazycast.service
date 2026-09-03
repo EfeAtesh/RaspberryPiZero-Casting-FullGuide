@@ -1,0 +1,14 @@
+[Unit]
+Description=LazyCast Wireless Display Receiver
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/home/chromecast/lazycast_setup/lazycast
+ExecStart=/home/chromecast/lazycast_setup/lazycast/all.sh
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

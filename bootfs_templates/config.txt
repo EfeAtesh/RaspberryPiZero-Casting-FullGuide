@@ -1,0 +1,13 @@
+# Raspberry Pi Zero 2 W - Wireless Cast Configuration
+# Display Driver: Fake KMS
+dtoverlay=vc4-fkms-v3d
+
+# GPU VRAM Memory Split (Optimal for 1080p hardware H.264 decoding)
+gpu_mem=256
+
+# USB Ethernet OTG Gadget Support (Failsafe connection)
+dtoverlay=dwc2
+
+# HDMI Auto-Detection
+hdmi_force_hotplug=1
+dtparam=audio=on
