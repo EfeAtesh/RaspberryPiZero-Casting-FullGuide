@@ -241,7 +241,7 @@ sequenceDiagram
     R->>S: M4 Response: 200 OK
     S->>R: M5: SET_PARAMETER (Trigger SETUP)
     R->>S: M5 Response: 200 OK
-    R->>S: M6: SETUP (Transport: RTP/AVP/UDP;unicast;client_port=1028)
+    R->>S: M6: SETUP (Transport: RTP/AVP/UDP, unicast, client_port=1028)
     S->>R: M6 Response: 200 OK (Server Port Assigned)
     R->>S: M7: PLAY (Start Session)
     S->>R: M7 Response: 200 OK

@@ -208,6 +208,43 @@ graph TD
 
 ---
 
+
+### 4.2 Protokol Akış Şeması (RTSP M1 - M7 El Sıkışması)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant S as Mobil Cihaz (Kaynak)
+    participant R as Pi Zero 2 W (Alıcı)
+
+    Note over S,R: Aşama 1: P2P Wi-Fi Direct Eşleşmesi
+    S->>R: P2P Probe Request / Grup Keşfi
+    R->>S: P2P Group Owner Oluşturma (WPS PIN: 31415926)
+    R->>S: DHCP IP Dağıtımı (IP: 192.168.173.80)
+
+    Note over S,R: Aşama 2: WFD Oturum Anlaşması (RTSP TCP 7236)
+    S->>R: M1: OPTIONS İsteği (org.wfa.wfd1.0)
+    R->>S: M1 Cevabı: 200 OK (Desteklenen Metotlar)
+    R->>S: M2: OPTIONS İsteği (Require: org.wfa.wfd1.0)
+    S->>R: M2 Cevabı: 200 OK
+    S->>R: M3: GET_PARAMETER (Yetenek Sorgulama)
+    R->>S: M3 Cevabı: wfd_video_formats (1080p30), LPCM Audio, Port 1028
+    S->>R: M4: SET_PARAMETER (Seçilen 1080p Modu)
+    R->>S: M4 Cevabı: 200 OK
+    S->>R: M5: SET_PARAMETER (SETUP Tetikleme)
+    R->>S: M5 Cevabı: 200 OK
+    R->>S: M6: SETUP (Transport: RTP/AVP/UDP, unicast, client_port=1028)
+    S->>R: M6 Cevabı: 200 OK (Sunucu Portu Atandı)
+    R->>S: M7: PLAY (Akışı Başlat)
+    S->>R: M7 Cevabı: 200 OK
+
+    Note over S,R: Aşama 3: Yüksek Kaliteli Video/Ses Akışı
+    S->>R: Kesintisiz RTP / UDP H.264 Video ve LPCM Ses Paketleri
+    R->>R: Jitter Tamponlu VideoCore IV Doğrudan Donanım Çözme
+```
+
+---
+
 ## 5. Adım Adım Kurulum ve Dağıtım Kılavuzu
 
 ### 5.1 Aşama 1: SD Kart Hazırlığı
