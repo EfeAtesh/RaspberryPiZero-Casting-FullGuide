@@ -149,7 +149,21 @@ This document defines the formal software engineering specification, subsystem a
 
 ## 3. System Requirements Specification (SRS)
 
-### 3.1 Hardware Requirements
+### 3.1 Hardware Components & Bill of Materials (BOM) 🔌 (•̀ᴗ•́)و ̑̑
+
+<p align="center">
+  <img src="./assets/hardware_materials.jpg" width="55%" alt="Hardware Materials" />
+</p>
+
+| Component | Required Specification | Purpose & Function |
+|---|---|---|
+| **Raspberry Pi Zero 2 W** | Quad-core 64-bit Cortex-A53 @ 1.0 GHz, 512MB RAM | Core host processing & VideoCore IV H.264 decoding |
+| **Micro-USB Cable** | 5V / 2.5A capable Micro USB-B cable | Stable power delivery during Wi-Fi Direct bursts |
+| **HDMI Cable** | Standard High-Speed HDMI cable | Carries uncompressed video & LPCM audio to TV |
+| **Mini-HDMI to HDMI Converter** | Mini-HDMI (Type-C Male) to HDMI (Type-A Female) adapter | Adapts Zero 2 W Mini-HDMI port to standard TV cable |
+| **Protective Enclosure + Heatsink** | 3D-printed / injection molded case with aluminum heatsink (Suggested) | Passive thermal management (maintains 45°C - 55°C) |
+| **MicroSD Card** | At least 8 GB / 16 GB (Class 10 / UHS-I rated) | High-speed OS, kernel buffers, and userland binaries |
+
 | Item | Specification | Technical Justification |
 |---|---|---|
 | **SoC / CPU** | Broadcom BCM2710A1 (Quad-core 64-bit Cortex-A53 @ 1.0 GHz) | Handles network socket stack and P2P state machine efficiently. |
@@ -378,6 +392,23 @@ Active Interface: p2p-wlan0-0
 ```
 
 ### 7.2 Client Connection Steps
+1. On the client Android device, open Quick Settings and select **Smart View** or **Cast**.
+2. Select **`raspberrypi`** (or configured hostname).
+3. If prompted, input the PIN: `31415926`.
+4. Verification: The sink display immediately transitions to full-screen 1080p mirror mode with synchronized HDMI stereo audio.
+
+### 7.3 Live TV Screen Verification & HDMI Audio Playback (つ✧ω✧)つ
+
+<p align="center">
+  <img src="./assets/live_tv_standby_test.jpg" width="65%" alt="Live TV Standby Screen Verification" />
+</p>
+
+> [!NOTE]
+> **Operational Verification Summary:**
+> - **Visual Pipeline:** 1080p Full HD standby wallpaper dynamically rendered with 40dp rounded corners and high-DPI vector typography.
+> - **Audio Pipeline:** Uncompressed stereo sound verified operational directly over HDMI (`sound_output_select = 0`), eliminating external DAC/ALSA sound card dependencies.
+> - **P2P Daemon:** Wi-Fi Direct beacon active on `p2p-dev-wlan0` with PIN `31415926`.
+
 1. On the client Android device, open Quick Settings and select **Smart View** or **Cast**.
 2. Select **`raspberrypi`** (or configured hostname).
 3. If prompted, input the PIN: `31415926`.

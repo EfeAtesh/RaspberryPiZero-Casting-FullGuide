@@ -146,7 +146,21 @@ Bu belge, Raspberry Pi Zero 2 W üzerinde çalışan gömülü bir kablosuz ekra
 
 ## 3. Sistem Gereksinim Şartnamesi (SRS)
 
-### 3.1 Donanım Gereksinimleri
+### 3.1 Donanım Bileşenleri ve Malzeme Listesi 🔌 (•̀ᴗ•́)و ̑̑
+
+<p align="center">
+  <img src="./assets/hardware_materials.jpg" width="55%" alt="Donanim Malzemeleri" />
+</p>
+
+| Bileşen | Önerilen Özellik | Görev ve Fonksiyon |
+|---|---|---|
+| **Raspberry Pi Zero 2 W** | 4 Çekirdek 64-bit Cortex-A53 @ 1.0 GHz, 512MB RAM | Ana işlemci ve VideoCore IV H.264 donanım çözücü |
+| **Micro-USB Güç Kablosu** | 5V / 2.5A destekli kaliteli Micro USB-B kablosu | Yüksek Wi-Fi veri transferinde kararlı güç beslemesi |
+| **HDMI Kablosu** | Standart Yüksek Hızlı HDMI kablosu | Görüntü ve LPCM sesi kayıpsız TV'ye aktarır |
+| **Mini-HDMI - HDMI Dönüştürücü** | Mini-HDMI (Type-C Erkek) -> Standart HDMI (Dişi) | Pi Zero 2 W çıkışını standart TV kablosuna bağlar |
+| **Koruyucu Kutu + Alüminyum Soğutucu** | Metal soğutucu bloklu Zero 2 W kasası (Önerilen) | Pasif ısı dağılımı (45°C - 55°C aralığında tutar) |
+| **MicroSD Hafıza Kartı** | En az 8 GB / 16 GB (Class 10 / UHS-I) | İşletim sistemi, tamponlar ve kütüphaneleri barındırır |
+
 | Bileşen | Özellik | Teknik Gerekçe |
 |---|---|---|
 | **SoC / İşlemci** | Broadcom BCM2710A1 (4 Çekirdek 64-bit Cortex-A53 @ 1.0 GHz) | Ağ yığını ve P2P durum makinesini yönetir. |
@@ -318,6 +332,23 @@ cd ~/lazycast_setup/lazycast
 ```
 
 ### 7.2 Bağlanma Adımları
+1. Android cihazınızda **Smart View** veya **Ekranı Yansıt** menüsünü açın.
+2. Listeden **`raspberrypi`** cihazını seçin.
+3. PIN sorarsa **`31415926`** girin.
+4. Görüntü tam ekran olarak TV'ye aktarılacaktır.
+
+### 7.3 Canlı TV Ekranı Doğrulaması ve HDMI Ses Testi (つ✧ω✧)つ
+
+<p align="center">
+  <img src="./assets/live_tv_standby_test.jpg" width="65%" alt="Canli TV Bekleme Ekrani Dogrulamasi" />
+</p>
+
+> [!NOTE]
+> **Canlı Test ve Çalışma Doğrulaması:**
+> - **Görüntü Hattı:** 1080p Full HD bekleme ekranı 40dp yuvarlatılmış kavisler ve büyük net vektör fontlarla ekrana yansıtıldı.
+> - **Ses Hattı:** Ses sinyali HDMI kablosu üzerinden doğrudan LPCM stereo formatında aktarılmakta (`sound_output_select = 0`), harici ses kartı ihtiyacı olmadan kristal netliğinde çalışmaktadır.
+> - **P2P Yayını:** Wi-Fi Direct sinyali `p2p-dev-wlan0` üzerinden PIN `31415926` ile yayına hazır durumdadır.
+
 1. Android cihazınızda **Smart View** veya **Ekranı Yansıt** menüsünü açın.
 2. Listeden **`raspberrypi`** cihazını seçin.
 3. PIN sorarsa **`31415926`** girin.
