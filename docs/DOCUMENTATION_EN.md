@@ -1,4 +1,5 @@
-# System Architecture, Requirements Specification and Installation Manual
+[raspberry_pi_cast_documentation_en.md](https://github.com/user-attachments/files/31803673/raspberry_pi_cast_documentation_en.md)
+# System Architecture, Requirements Specification and Installation Manual (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧
 ## Wireless Screen Mirroring Receiver System (Miracast / WFD)
 **Target Platform:** Raspberry Pi Zero 2 W  
 **Engine Profile:** High-Fidelity 1080p Video Streaming (Player 2 / Hardware Buffered)  
@@ -21,7 +22,7 @@
 
 ---
 
-## 1. Quick Installation Guide (3-Minute Setup)
+## 1. Quick Installation Guide (3-Minute Setup) ⚡ (•̀ᴗ•́)و ̑̑
 
 For rapid, automated deployment on a fresh Raspberry Pi Zero 2 W running **Raspberry Pi OS Lite (32-bit Bullseye)**, execute the following 3 steps:
 
@@ -132,7 +133,7 @@ cd ~/lazycast_setup/lazycast && ./all.sh
 
 ---
 
-## 2. System Overview and Scope
+## 2. System Overview and Scope 📺 (✿◠‿◠)
 
 ### 2.1 Purpose
 This document defines the formal software engineering specification, subsystem architecture, deployment protocol, and operational procedures for an embedded wireless display sink (receiver) built on the Raspberry Pi Zero 2 W. The system is engineered to provide high-fidelity, artifact-free 1080p Full HD video and audio casting from mobile devices (Android / Samsung Smart View) directly to HDMI-equipped screens.
@@ -172,7 +173,7 @@ This document defines the formal software engineering specification, subsystem a
 
 ---
 
-## 4. System Architecture and Subsystem Decomposition
+## 4. System Architecture and Subsystem Decomposition 🏗️ (ง •_•)ง
 
 ### 4.1 Architectural Decomposition
 
@@ -206,14 +207,14 @@ graph TD
         HDMI_Out["HDMI Sink (TV / Monitor)"]
     end
 
-    WFD_Src <-->|P2P Negotiation / WPS PIN| WPA
+    WFD_Src ---|"P2P Negotiation / WPS PIN"| WPA
     WPA --> DHCP
-    RTSP_Client <-->|RTSP M1-M7 Handshake (TCP 7236)| RTSP_Server
-    Media_Encoder -->|RTP / UDP Packets (Port 1028)| JitterBuffer
+    RTSP_Client ---|"RTSP M1-M7 Handshake [TCP 7236]"| RTSP_Server
+    Media_Encoder -->|"RTP / UDP Packets [Port 1028]"| JitterBuffer
     JitterBuffer --> OMX_Video
     JitterBuffer --> OMX_Audio
-    OMX_Video -->|1080p Video Stream| HDMI_Out
-    OMX_Audio -->|LPCM Stereo Audio| HDMI_Out
+    OMX_Video -->|"1080p Video Stream"| HDMI_Out
+    OMX_Audio -->|"LPCM Stereo Audio"| HDMI_Out
 ```
 
 ### 4.2 Protocol Sequence Flow (RTSP M1 to M7 Handshake)
@@ -318,7 +319,7 @@ sequenceDiagram
 
 ---
 
-## 6. Performance Engineering & Quality Optimization Specification
+## 6. Performance Engineering & Quality Optimization Specification 🚀 (★‿★)
 
 ```
 +-------------------------------------------------------------------------+
@@ -355,7 +356,7 @@ sudo iwconfig wlan0 power off
 
 ---
 
-## 7. Operational Manual and Verification Procedures
+## 7. Operational Manual and Verification Procedures 🕹️ (つ✧ω✧)つ
 
 ### 7.1 Service Execution
 Execute the master casting daemon from the terminal:
@@ -384,27 +385,24 @@ Active Interface: p2p-wlan0-0
 
 ---
 
-## 8. Extra UI Feature: Modern 1080p Control Center Dashboard
+## 8. Extra UI Feature: Modern 1080p Control Center Dashboard 🎨 (づ｡◕‿‿◕｡)づ
+
+### 📺 Live UI Gallery & Comparison (Modern Dashboard vs. Classic TUI)
+
+<p align="center">
+  <img src="./assets/dashboard_tv_screenshot.jpg" width="48%" alt="Modern 1080p Pygame UI" />
+  <img src="./assets/classic_tui_screenshot.png" width="48%" alt="Classic Lightweight TUI" />
+</p>
+
+| Feature | Modern 1080p Pygame Dashboard (`menu`) | Classic TUI Menu (`classic-menu`) |
+|:---|:---:|:---:|
+| **Rendering Engine** | Direct `/dev/fb0` Framebuffer Hardware Graphics | Lightweight `ncurses` (Whiptail) |
+| **Card Design** | **40dp Rounded Cards**, Apple TV Dark Glassmorphism | Clean Retro Text-Based Dialogs |
+| **Bluetooth Pairing** | **Auto Background Discovery & Live PIN Popup** | Step-by-Step TUI Pairing Wizard |
+| **Input Support** | Full Mouse Cursor & Keyboard Navigation | Keyboard Arrow Keys & Mouse |
+| **Language** | Dynamic `[TR]` / `[EN]` Instant Toggle | Turkish / English Selection Menu |
 
 ---
-
-
----
-
-### 📺 UI Comparison: Modern vs. Classic Dashboard
-
-| Modern 1080p Pygame UI (`menu`) | Classic Lightweight TUI (`classic-menu`) |
-|:---:|:---:|
-| ![Modern UI](assets/dashboard_tv_screenshot.jpg) | ![Classic UI](assets/classic_tui_screenshot.png) |
-| *Hardware-rendered 1080p Dark Glassmorphism with 40dp rounded cards, mouse/keyboard support, and live telemetry.* | *Ultra-lightweight ncurses TUI wizard for terminal and low-overhead network/BT configuration.* |
-
-- **Launch Modern Dashboard:** `menu` (or `sudo python3 scripts/cast_gui.py`)
-- **Launch Classic TUI Menu:** `classic-menu` (or `bash scripts/classic_menu.sh`)
-
-
-
-
-*Modern Dark Glassmorphism 1080p Dashboard running on Raspberry Pi Zero 2 W with 40dp rounded cards, live CPU/VRAM telemetry, continuous Bluetooth discovery, and Wi-Fi manager.*
 
 
 An optional, hardware-accelerated **1080p Dark Glassmorphism Control Center Dashboard** built with Python and Pygame directly on `/dev/fb0`.
@@ -457,3 +455,4 @@ menu
 | Video macro-blocking / dropped frames | Wi-Fi chipset periodic power save throttling. | Execute `sudo iwconfig wlan0 power off` and expand kernel socket buffers. |
 | Frame jitter on high-motion scenes | Insufficient decoding queue in unbuffered modes. | Ensure `player_select = 2` is active for hardware-buffered decoding. |
 | `TypeError: rect() takes no keyword arguments` in Pygame | Pygame 1.9.6 does not support `border_radius` keyword argument. | Use positional arguments compatible with Pygame 1.9.6 on Debian Bullseye. |
+

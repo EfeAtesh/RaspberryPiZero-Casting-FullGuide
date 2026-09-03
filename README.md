@@ -207,14 +207,14 @@ graph TD
         HDMI_Out["HDMI Sink (TV / Monitor)"]
     end
 
-    WFD_Src <-->|P2P Negotiation / WPS PIN| WPA
+    WFD_Src ---|"P2P Negotiation / WPS PIN"| WPA
     WPA --> DHCP
-    RTSP_Client <-->|RTSP M1-M7 Handshake (TCP 7236)| RTSP_Server
-    Media_Encoder -->|RTP / UDP Packets (Port 1028)| JitterBuffer
+    RTSP_Client ---|"RTSP M1-M7 Handshake [TCP 7236]"| RTSP_Server
+    Media_Encoder -->|"RTP / UDP Packets [Port 1028]"| JitterBuffer
     JitterBuffer --> OMX_Video
     JitterBuffer --> OMX_Audio
-    OMX_Video -->|1080p Video Stream| HDMI_Out
-    OMX_Audio -->|LPCM Stereo Audio| HDMI_Out
+    OMX_Video -->|"1080p Video Stream"| HDMI_Out
+    OMX_Audio -->|"LPCM Stereo Audio"| HDMI_Out
 ```
 
 ### 4.2 Protocol Sequence Flow (RTSP M1 to M7 Handshake)
@@ -386,6 +386,24 @@ Active Interface: p2p-wlan0-0
 ---
 
 ## 8. Extra UI Feature: Modern 1080p Control Center Dashboard 🎨 (づ｡◕‿‿◕｡)づ
+
+### 📺 Live UI Gallery & Comparison (Modern Dashboard vs. Classic TUI)
+
+<p align="center">
+  <img src="./assets/dashboard_tv_screenshot.jpg" width="48%" alt="Modern 1080p Pygame UI" />
+  <img src="./assets/classic_tui_screenshot.png" width="48%" alt="Classic Lightweight TUI" />
+</p>
+
+| Feature | Modern 1080p Pygame Dashboard (`menu`) | Classic TUI Menu (`classic-menu`) |
+|:---|:---:|:---:|
+| **Rendering Engine** | Direct `/dev/fb0` Framebuffer Hardware Graphics | Lightweight `ncurses` (Whiptail) |
+| **Card Design** | **40dp Rounded Cards**, Apple TV Dark Glassmorphism | Clean Retro Text-Based Dialogs |
+| **Bluetooth Pairing** | **Auto Background Discovery & Live PIN Popup** | Step-by-Step TUI Pairing Wizard |
+| **Input Support** | Full Mouse Cursor & Keyboard Navigation | Keyboard Arrow Keys & Mouse |
+| **Language** | Dynamic `[TR]` / `[EN]` Instant Toggle | Turkish / English Selection Menu |
+
+---
+
 
 An optional, hardware-accelerated **1080p Dark Glassmorphism Control Center Dashboard** built with Python and Pygame directly on `/dev/fb0`.
 

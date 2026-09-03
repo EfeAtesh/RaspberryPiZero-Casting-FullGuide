@@ -1,4 +1,4 @@
-# Sistem Mimarisi, Gereksinim Şartnamesi ve Kurulum Kılavuzu
+# Sistem Mimarisi, Gereksinim Şartnamesi ve Kurulum Kılavuzu (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧
 ## Kablosuz Ekran Yansıtma Alıcı Sistemi (Miracast / WFD)
 **Hedef Platform:** Raspberry Pi Zero 2 W  
 **Motor Profili:** Yüksek Kaliteli 1080p Video Akışı (Player 2 / Donanımsal Tamponlu)  
@@ -21,7 +21,7 @@
 
 ---
 
-## 1. Hızlı Kurulum Kılavuzu (3 Dakikada Kurulum)
+## 1. Hızlı Kurulum Kılavuzu (3 Dakikada Kurulum) ⚡ (•̀ᴗ•́)و ̑̑
 
 Sıfırdan bir Raspberry Pi Zero 2 W üzerinde **Raspberry Pi OS Lite (32-bit Bullseye)** ile kurulumu 3 dakikada tamamlamak için:
 
@@ -131,7 +131,7 @@ cd ~/lazycast_setup/lazycast && ./all.sh
 
 ---
 
-## 2. Sistem Genel Bakış ve Kapsam
+## 2. Sistem Genel Bakış ve Kapsam 📺 (✿◠‿◠)
 
 ### 2.1 Amaç
 Bu belge, Raspberry Pi Zero 2 W üzerinde çalışan gömülü bir kablosuz ekran alıcısı (sink) sisteminin yazılım mühendisliği gereksinimlerini, mimarisini, kurulum adımlarını ve kullanım prosedürlerini tanımlar. Sistem, Android mobil cihazlardan (Smart View / Miracast) HDMI ekranlara **kristal netliğinde, takılmasız ve pürüzsüz 1080p Full HD video ve ses** aktarımını hedefler.
@@ -164,7 +164,7 @@ Bu belge, Raspberry Pi Zero 2 W üzerinde çalışan gömülü bir kablosuz ekra
 
 ---
 
-## 4. Sistem Mimarisi ve Alt Sistem Ayrıştırması
+## 4. Sistem Mimarisi ve Alt Sistem Ayrıştırması 🏗️ (ง •_•)ง
 
 ```mermaid
 graph TD
@@ -196,14 +196,14 @@ graph TD
         HDMI_Out["HDMI Ekran (TV / Monitör)"]
     end
 
-    WFD_Src <-->|P2P Eşleşme / PIN: 31415926| WPA
+    WFD_Src ---|"P2P Eslesme / PIN: 31415926"| WPA
     WPA --> DHCP
-    RTSP_Client <-->|RTSP M1-M7 El Sıkışması| RTSP_Server
-    Media_Encoder -->|RTP / UDP Paketleri| JitterBuffer
+    RTSP_Client ---|"RTSP M1-M7 El Sikismasi"| RTSP_Server
+    Media_Encoder -->|"RTP / UDP Paketleri"| JitterBuffer
     JitterBuffer --> OMX_Video
     JitterBuffer --> OMX_Audio
-    OMX_Video -->|1080p Video| HDMI_Out
-    OMX_Audio -->|LPCM Stereo Ses| HDMI_Out
+    OMX_Video -->|"1080p Video"| HDMI_Out
+    OMX_Audio -->|"LPCM Stereo Ses"| HDMI_Out
 ```
 
 ---
@@ -254,7 +254,7 @@ graph TD
 
 ---
 
-## 6. Performans Mühendisliği ve Kalite Optimizasyonu
+## 6. Performans Mühendisliği ve Kalite Optimizasyonu 🚀 (★‿★)
 
 ### 6.1 VRAM Dağılımı (`gpu_mem=256`)
 - **GPU Belleği (256 MB):** 1080p video kare tamponları, çift/üçlü tamponlama ve donanımsal renk uzayı dönüşümü için ayrılmıştır.
@@ -272,7 +272,7 @@ sudo iwconfig wlan0 power off
 
 ---
 
-## 7. Kullanım Kılavuzu ve Doğrulama Prosedürleri
+## 7. Kullanım Kılavuzu ve Doğrulama Prosedürleri 🕹️ (つ✧ω✧)つ
 
 ### 7.1 Alıcıyı Başlatma
 ```bash
@@ -288,7 +288,25 @@ cd ~/lazycast_setup/lazycast
 
 ---
 
-## 8. Ekstra UI Özelliği: Modern 1080p Kontrol Merkezi Dashboard
+## 8. Ekstra UI Özelliği: Modern 1080p Kontrol Merkezi Dashboard 🎨 (づ｡◕‿‿◕｡)づ
+
+### 📺 Canlı Arayüz Galerisi (Modern Dashboard vs. Klasik Menü)
+
+<p align="center">
+  <img src="./assets/dashboard_tv_screenshot.jpg" width="48%" alt="Modern 1080p Pygame UI" />
+  <img src="./assets/classic_tui_screenshot.png" width="48%" alt="Klasik TUI Menüsü" />
+</p>
+
+| Özellik | Modern 1080p Pygame Paneli (`menu`) | Klasik TUI Menüsü (`classic-menu`) |
+|:---|:---:|:---:|
+| **Görsel Motor** | Doğrudan `/dev/fb0` Framebuffer Donanım Çizimi | Hafif `ncurses` (Whiptail) |
+| **Kart Tasarımı** | **40dp Kavisli Kartlar**, Apple TV Koyu Cam Efekti | Sade Retro Metin Menüsü |
+| **Bluetooth Eşleşme** | **Otomatik Arka Plan Avcısı & Canlı PIN Penceresi** | Adım Adım Metin Sihirbazı |
+| **Giriş Desteği** | Tam Fare İmleci ve Klavye Desteği | Klavye Yön Tuşları ve Fare |
+| **Dil Desteği** | Anlık Tek Tıkla `[TR]` / `[EN]` Geçişi | Türkçe / İngilizce Seçim Penceresi |
+
+---
+
 
 ---
 
