@@ -1,3 +1,4 @@
+[raspberry_pi_cast_documentation_en.md](https://github.com/user-attachments/files/31803673/raspberry_pi_cast_documentation_en.md)
 # System Architecture, Requirements Specification and Installation Manual
 ## Wireless Screen Mirroring Receiver System (Miracast / WFD)
 **Target Platform:** Raspberry Pi Zero 2 W  
@@ -436,3 +437,4 @@ menu
 | Video macro-blocking / dropped frames | Wi-Fi chipset periodic power save throttling. | Execute `sudo iwconfig wlan0 power off` and expand kernel socket buffers. |
 | Frame jitter on high-motion scenes | Insufficient decoding queue in unbuffered modes. | Ensure `player_select = 2` is active for hardware-buffered decoding. |
 | `TypeError: rect() takes no keyword arguments` in Pygame | Pygame 1.9.6 does not support `border_radius` keyword argument. | Use positional arguments compatible with Pygame 1.9.6 on Debian Bullseye. |
+
