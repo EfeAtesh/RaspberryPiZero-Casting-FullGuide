@@ -1,3 +1,5 @@
+After more than 20 times of OS flashing to sd card it is finally here!
+
 [raspberry_pi_cast_documentation_en.md](https://github.com/user-attachments/files/31803673/raspberry_pi_cast_documentation_en.md)
 # System Architecture, Requirements Specification and Installation Manual (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧
 ## Wireless Screen Mirroring Receiver System (Miracast / WFD)
