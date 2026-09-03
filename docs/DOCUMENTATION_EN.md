@@ -1,3 +1,5 @@
+After more than 20 times of OS flashing to sd card it is finally here!
+
 [raspberry_pi_cast_documentation_en.md](https://github.com/user-attachments/files/31803673/raspberry_pi_cast_documentation_en.md)
 # System Architecture, Requirements Specification and Installation Manual (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧
 ## Wireless Screen Mirroring Receiver System (Miracast / WFD)
@@ -133,6 +135,103 @@ cd ~/lazycast_setup/lazycast && ./all.sh
 
 ---
 
+## 1.1 Plug & Play Operational Guide (Zero-Configuration Dongle) 🔌 (•̀ᴗ•́)و ̑̑
+
+Transform your Raspberry Pi Zero 2 W into a 100% standalone, headless TV dongle that requires **zero keyboard, zero mouse, and zero SSH interaction** after initial setup.
+
+```
++-----------------------------------------------------------------------------------+
+|                        PLUG & PLAY LIFECYCLE WORKFLOW                             |
++-----------------------------------------------------------------------------------+
+|  1. POWER ON        2. SILENT BOOT       3. READY STANDBY     4. 1-CLICK CAST     |
+|  Plug Micro-USB  -> macOS Progress   ->  40dp Apple Card  ->  Android/Windows     |
+|  into TV / Wall     Bar (2.5 sec)        PIN: 31415926        Miracast Stream     |
++-----------------------------------------------------------------------------------+
+```
+
+### Step 1: Physical Connection (Hardware Setup)
+1. **Video & Audio:** Connect the **Mini-HDMI to HDMI converter** to the Pi Zero 2 W and plug the HDMI cable into your TV / Monitor.
+2. **Power Delivery:** Connect the **Micro-USB cable** to the PWR IN port of the Pi and plug it into your TV's USB port (5V / 1A+) or a standard 5V / 2.5A USB wall adapter.
+
+### Step 2: Autonomous Startup (Hands-Free)
+- The Pi powers on automatically with **Silent Boot** (no terminal logs, no flashing cursor).
+- A sleek **macOS-style progress bar** smoothly fills in 2.5 seconds on the TV.
+- The system automatically loads the **Monochrome Apple Standby Screen (`Hazir / Ready`)** with WPS PIN `31415926`.
+
+### Step 3: Instant Casting (From Phone / Tablet / PC)
+- **Samsung / Android Devices:**
+  1. Open Quick Settings and tap **Smart View** or **Cast / Ekran Yansıt**.
+  2. Tap **`raspberrypi`** in the list.
+  3. Enter PIN: `31415926` when prompted.
+  4. Your phone screen and stereo audio immediately stream to the TV in full 1080p.
+- **Windows 10 / 11 PCs:**
+  1. Press `Win + K` to open the Cast menu.
+  2. Select **`raspberrypi`** and enter PIN `31415926`.
+
+### Step 4: Autonomous Standby Recovery
+- When you finish streaming, simply tap **Disconnect** on your phone.
+- The Pi automatically returns to the **Monochrome Standby Screen** instantly, ready for the next session with zero manual intervention.
+
+---
+
+### 1.2 How to Configure Autonomous Plug & Play Mode (Technical Setup) ⚙️ (•̀ᴗ•́)و ̑̑
+
+To configure your Raspberry Pi so it boots **100% autonomously on power-on without requiring SSH, a keyboard, or a mouse**, execute the following 4-step setup once on the device:
+
+#### Step 1: Enable Console Autologin & Silent Boot
+Hides all Linux kernel boot text, terminal prompts, and blinking cursors:
+```bash
+# 1. Enable console autologin (bypasses login prompt)
+sudo raspi-config nonint do_boot_behaviour B2
+
+# 2. Configure silent boot in cmdline.txt
+sudo sed -i 's/console=tty1/console=tty3 quiet loglevel=3 vt.global_cursor_default=0 logo.nologo/' /boot/cmdline.txt
+
+# 3. Mask tty1 login prompt so the shell never overwrites the TV display
+sudo systemctl stop getty@tty1.service 2>/dev/null || true
+sudo systemctl disable getty@tty1.service 2>/dev/null || true
+sudo systemctl mask getty@tty1.service 2>/dev/null || true
+```
+
+#### Step 2: Configure the Background Systemd Autostart Service
+Ensures LazyCast and the display pipeline boot automatically on power-on:
+```bash
+sudo bash -c 'cat << "EOF" > /etc/systemd/system/lazycast.service
+[Unit]
+Description=LazyCast Wireless Display Receiver
+After=network.target sound.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/home/chromecast/lazycast_setup/lazycast
+ExecStart=/bin/bash /home/chromecast/lazycast_setup/lazycast/all.sh
+Restart=always
+RestartSec=2
+StandardOutput=null
+StandardError=null
+
+[Install]
+WantedBy=multi-user.target
+EOF'
+
+# Enable the service for auto-start on every boot
+sudo systemctl daemon-reload
+sudo systemctl enable lazycast.service
+sudo systemctl restart lazycast.service
+```
+
+#### Step 3: Verify the Autonomous Startup Lifecycle
+Reboot your Raspberry Pi to verify the hands-free startup:
+```bash
+sudo reboot
+```
+1. Screen turns pure black with a **2.5s macOS loading progress bar**.
+2. Transitions automatically into the **Monochrome Apple Standby Screen (`Hazir / Ready`)**.
+3. Cast directly from your phone with PIN: **`31415926`**!
+
+---
+
 ## 2. System Overview and Scope 📺 (✿◠‿◠)
 
 ### 2.1 Purpose
@@ -158,21 +257,12 @@ This document defines the formal software engineering specification, subsystem a
 | Component | Required Specification | Purpose & Function |
 |---|---|---|
 | **Raspberry Pi Zero 2 W** | Quad-core 64-bit Cortex-A53 @ 1.0 GHz, 512MB RAM | Core host processing & VideoCore IV H.264 decoding |
-| **Micro-USB Cable** | 5V / 2.5A capable Micro USB-B cable | Stable power delivery during Wi-Fi Direct bursts |
-| **HDMI Cable** | Standard High-Speed HDMI cable | Carries uncompressed video & LPCM audio to TV |
+| **Micro-USB Cable** | 5V / 2.5A capable Micro USB-B cable |  For power delivery during Wi-Fi Direct bursts |
+| **HDMI Cable** | Standard High-Speed HDMI cable | Carries video & LPCM audio to TV |
 | **Mini-HDMI to HDMI Converter** | Mini-HDMI (Type-C Male) to HDMI (Type-A Female) adapter | Adapts Zero 2 W Mini-HDMI port to standard TV cable |
 | **Protective Enclosure + Heatsink** | 3D-printed / injection molded case with aluminum heatsink (Suggested) | Passive thermal management (maintains 45°C - 55°C) |
-| **MicroSD Card** | At least 8 GB / 16 GB (Class 10 / UHS-I rated) | High-speed OS, kernel buffers, and userland binaries |
+| **MicroSD Card** | At least 8 GB / 16 GB (Class 10 / UHS-I rated) | Just for OS |
 
-| Item | Specification | Technical Justification |
-|---|---|---|
-| **SoC / CPU** | Broadcom BCM2710A1 (Quad-core 64-bit Cortex-A53 @ 1.0 GHz) | Handles network socket stack and P2P state machine efficiently. |
-| **GPU** | Broadcom VideoCore IV (V3D @ 400 MHz) | Required for hardware H.264 video decoding via OpenMAX IL. |
-| **System RAM** | 512 MB LPDDR2 SDRAM | Divided evenly: GPU (256 MB VRAM) and Linux OS (256 MB System RAM). |
-| **Storage** | 16 GB+ MicroSD (Class 10 / UHS-I) | Houses base image, kernel buffers, and userland source binaries. |
-| **Wireless** | 2.4 GHz IEEE 802.11 b/g/n (Synaptics/Broadcom BCM43436) | Supports Wi-Fi Direct (P2P) and Wi-Fi Display (WFD). |
-| **Video/Audio Out** | Mini-HDMI (Type C) | Transmits 1080p video signal and LPCM uncompressed audio to display. |
-| **Power Supply** | 5V / 2.5A Micro-USB | Ensures stable power delivery during high-throughput wireless bursts. |
 
 ### 3.2 Software & Operating System Specification
 - **Operating System:** Raspberry Pi OS Lite (32-bit / Debian 11 "Bullseye")
@@ -419,7 +509,7 @@ Active Interface: p2p-wlan0-0
 ## 8. Extra UI Feature: Modern 1080p Control Center Dashboard 🎨 (づ｡◕‿‿◕｡)づ
 
 ### 📺 Live UI Gallery & Comparison (Modern Dashboard vs. Classic TUI)
-
+Those screenshots are menu screens for pairing for wifi. 
 <p align="center">
   <img src="./assets/dashboard_tv_screenshot.jpg" width="48%" alt="Modern 1080p Pygame UI" />
   <img src="./assets/classic_tui_screenshot.png" width="48%" alt="Classic Lightweight TUI" />

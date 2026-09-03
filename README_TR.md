@@ -131,6 +131,103 @@ cd ~/lazycast_setup/lazycast && ./all.sh
 
 ---
 
+## 1.1 Tak-Çalıştır Kullanım Kılavuzu (Sıfır Yapılandırma) 🔌 (•̀ᴗ•́)و ̑̑
+
+Kurulum sonrasında Raspberry Pi Zero 2 W'yi **hiçbir klavye, fare veya SSH bağlantısı gerektirmeyen**, tıpkı ticari bir Chromecast gibi %100 otonom bir TV dongle'ına dönüştürün.
+
+```
++-----------------------------------------------------------------------------------+
+|                     TAK-ÇALIŞTIR YAŞAM DÖNGÜSÜ İŞ AKIŞI                           |
++-----------------------------------------------------------------------------------+
+|  1. GÜÇ BAĞLANTISI   2. SESSİZ AÇILIŞ     3. YAYINA HAZIR      4. TEK TIKLA YAYIN |
+|  Micro-USB'yi     -> macOS Yükleme     -> 40dp Apple Kart   -> Android/Windows    |
+|  TV'ye / Adaptöre    Barı (2.5 sn)        PIN: 31415926        Miracast Yayını    |
++-----------------------------------------------------------------------------------+
+```
+
+### Adım 1: Fiziksel Bağlantı (Donanım Kurulumu)
+1. **Görüntü ve Ses:** **Mini-HDMI dönüştürücüyü** Pi Zero 2 W'ye takın ve HDMI kablosuyla TV veya monitörünüze bağlayın.
+2. **Güç Beslemesi:** **Micro-USB güç kablosunu** Pi'nin `PWR IN` portuna takıp diğer ucunu TV'nin USB girişine (5V / 1A+) ya da standart bir 5V / 2.5A telefon adaptörüne takın.
+
+### Adım 2: Tam Otomatik Başlama (Müdahalesiz)
+- Pi fişe takıldığı an **Sessiz Açılış (Silent Boot)** ile log basmadan başlar.
+- TV ekranında siyah zemin üzerinde 2.5 saniyelik şık bir **macOS yükleme çubuğu** dolar.
+- Ardından doğrudan **Saf Monokrom Apple Bekleme Ekranı (`Hazir / Ready`)** PIN `31415926` ile açılır.
+
+### Adım 3: Anında Yayın Başlatma (Telefon / Tablet / PC)
+- **Samsung ve Android Telefonlar:**
+  1. Hızlı Ayarlar menüsünden **Smart View** veya **Ekranı Yansıt**'a dokunun.
+  2. Listeden **`raspberrypi`** cihazını seçin.
+  3. PIN sorarsa **`31415926`** girin.
+  4. Telefonunuzun ekranı ve sesi anında tam ekran 1080p kalitesiyle TV'ye yansır.
+- **Windows 10 / 11 Bilgisayarlar:**
+  1. Klavyeden `Win + K` tuşlarına basarak Yansıt menüsünü açın.
+  2. **`raspberrypi`**'yi seçip PIN kodunu girin.
+
+### Adım 4: Otomatik Bekleme Moduna Dönüş
+- Yayını bitirmek istediğinizde telefonunuzdan sadece **Bağlantıyı Kes**'e basmanız yeterlidir.
+- Pi hiçbir komut veya yeniden başlatma gerekmeden anında **`Hazir / Ready`** bekleme ekranına geri döner ve bir sonraki yayını bekler.
+
+---
+
+### 1.2 Cihazı Tak-Çalıştır Moduna Ayarlama (Teknik Yapılandırma) ⚙️ (•̀ᴗ•́)و ̑̑
+
+Raspberry Pi'nizi fişe takıldığı anda **hiçbir SSH, klavye veya fare gerekmeden %100 otomatik başlayacak** şekilde yapılandırmak için cihaz üzerinde şu 4 adımı bir kez uygulayın:
+
+#### Adım 1: Otomatik Giriş ve Sessiz Açılışı (Silent Boot) Aktif Etme
+Tüm Linux kernel loglarını, açılış kayan yazılarını ve yanıp sönen imleci gizler:
+```bash
+# 1. Otomatik girişi aç (Login sormasını engeller)
+sudo raspi-config nonint do_boot_behaviour B2
+
+# 2. cmdline.txt içine sessiz boot parametrelerini ekle
+sudo sed -i 's/console=tty1/console=tty3 quiet loglevel=3 vt.global_cursor_default=0 logo.nologo/' /boot/cmdline.txt
+
+# 3. tty1 konsolunu maskele (Komut satırının TV ekranını ezmesini engeller)
+sudo systemctl stop getty@tty1.service 2>/dev/null || true
+sudo systemctl disable getty@tty1.service 2>/dev/null || true
+sudo systemctl mask getty@tty1.service 2>/dev/null || true
+```
+
+#### Adım 2: Arka Plan Otomatik Başlatma Servisini (Systemd) Kurma
+Pi açıldığı anda LazyCast motorunu ve bekleme ekranını otomatik başlatır:
+```bash
+sudo bash -c 'cat << "EOF" > /etc/systemd/system/lazycast.service
+[Unit]
+Description=LazyCast Wireless Display Receiver
+After=network.target sound.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/home/chromecast/lazycast_setup/lazycast
+ExecStart=/bin/bash /home/chromecast/lazycast_setup/lazycast/all.sh
+Restart=always
+RestartSec=2
+StandardOutput=null
+StandardError=null
+
+[Install]
+WantedBy=multi-user.target
+EOF'
+
+# Servisi her açılış için kalıcı olarak etkinleştir
+sudo systemctl daemon-reload
+sudo systemctl enable lazycast.service
+sudo systemctl restart lazycast.service
+```
+
+#### Adım 3: Otonom Başlatmayı Test Etme
+Pi'yi yeniden başlatarak tak-çalıştır modunu test edin:
+```bash
+sudo reboot
+```
+1. Ekran siyah zemin üzerinde **2.5 saniyelik macOS yükleme çubuğuyla** açılır.
+2. Ardından doğrudan **Saf Monokrom Bekleme Ekranına (`Hazir / Ready`)** geçer.
+3. Telefonundan PIN: **`31415926`** ile anında yayına başla!
+
+---
+
 ## 2. Sistem Genel Bakış ve Kapsam 📺 (✿◠‿◠)
 
 ### 2.1 Amaç
