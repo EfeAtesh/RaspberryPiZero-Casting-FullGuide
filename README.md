@@ -160,21 +160,12 @@ This document defines the formal software engineering specification, subsystem a
 | Component | Required Specification | Purpose & Function |
 |---|---|---|
 | **Raspberry Pi Zero 2 W** | Quad-core 64-bit Cortex-A53 @ 1.0 GHz, 512MB RAM | Core host processing & VideoCore IV H.264 decoding |
-| **Micro-USB Cable** | 5V / 2.5A capable Micro USB-B cable | Stable power delivery during Wi-Fi Direct bursts |
-| **HDMI Cable** | Standard High-Speed HDMI cable | Carries uncompressed video & LPCM audio to TV |
+| **Micro-USB Cable** | 5V / 2.5A capable Micro USB-B cable |  For power delivery during Wi-Fi Direct bursts |
+| **HDMI Cable** | Standard High-Speed HDMI cable | Carries video & LPCM audio to TV |
 | **Mini-HDMI to HDMI Converter** | Mini-HDMI (Type-C Male) to HDMI (Type-A Female) adapter | Adapts Zero 2 W Mini-HDMI port to standard TV cable |
 | **Protective Enclosure + Heatsink** | 3D-printed / injection molded case with aluminum heatsink (Suggested) | Passive thermal management (maintains 45°C - 55°C) |
-| **MicroSD Card** | At least 8 GB / 16 GB (Class 10 / UHS-I rated) | High-speed OS, kernel buffers, and userland binaries |
+| **MicroSD Card** | At least 8 GB / 16 GB (Class 10 / UHS-I rated) | Just for OS |
 
-| Item | Specification | Technical Justification |
-|---|---|---|
-| **SoC / CPU** | Broadcom BCM2710A1 (Quad-core 64-bit Cortex-A53 @ 1.0 GHz) | Handles network socket stack and P2P state machine efficiently. |
-| **GPU** | Broadcom VideoCore IV (V3D @ 400 MHz) | Required for hardware H.264 video decoding via OpenMAX IL. |
-| **System RAM** | 512 MB LPDDR2 SDRAM | Divided evenly: GPU (256 MB VRAM) and Linux OS (256 MB System RAM). |
-| **Storage** | 16 GB+ MicroSD (Class 10 / UHS-I) | Houses base image, kernel buffers, and userland source binaries. |
-| **Wireless** | 2.4 GHz IEEE 802.11 b/g/n (Synaptics/Broadcom BCM43436) | Supports Wi-Fi Direct (P2P) and Wi-Fi Display (WFD). |
-| **Video/Audio Out** | Mini-HDMI (Type C) | Transmits 1080p video signal and LPCM uncompressed audio to display. |
-| **Power Supply** | 5V / 2.5A Micro-USB | Ensures stable power delivery during high-throughput wireless bursts. |
 
 ### 3.2 Software & Operating System Specification
 - **Operating System:** Raspberry Pi OS Lite (32-bit / Debian 11 "Bullseye")
