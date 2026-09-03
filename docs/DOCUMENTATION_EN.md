@@ -386,6 +386,27 @@ Active Interface: p2p-wlan0-0
 
 ## 8. Extra UI Feature: Modern 1080p Control Center Dashboard
 
+---
+
+
+---
+
+### 📺 UI Comparison: Modern vs. Classic Dashboard
+
+| Modern 1080p Pygame UI (`menu`) | Classic Lightweight TUI (`classic-menu`) |
+|:---:|:---:|
+| ![Modern UI](assets/dashboard_tv_screenshot.jpg) | ![Classic UI](assets/classic_tui_screenshot.png) |
+| *Hardware-rendered 1080p Dark Glassmorphism with 40dp rounded cards, mouse/keyboard support, and live telemetry.* | *Ultra-lightweight ncurses TUI wizard for terminal and low-overhead network/BT configuration.* |
+
+- **Launch Modern Dashboard:** `menu` (or `sudo python3 scripts/cast_gui.py`)
+- **Launch Classic TUI Menu:** `classic-menu` (or `bash scripts/classic_menu.sh`)
+
+
+
+
+*Modern Dark Glassmorphism 1080p Dashboard running on Raspberry Pi Zero 2 W with 40dp rounded cards, live CPU/VRAM telemetry, continuous Bluetooth discovery, and Wi-Fi manager.*
+
+
 An optional, hardware-accelerated **1080p Dark Glassmorphism Control Center Dashboard** built with Python and Pygame directly on `/dev/fb0`.
 
 ```

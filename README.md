@@ -1,5 +1,5 @@
 [raspberry_pi_cast_documentation_en.md](https://github.com/user-attachments/files/31803673/raspberry_pi_cast_documentation_en.md)
-# System Architecture, Requirements Specification and Installation Manual
+# System Architecture, Requirements Specification and Installation Manual (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧
 ## Wireless Screen Mirroring Receiver System (Miracast / WFD)
 **Target Platform:** Raspberry Pi Zero 2 W  
 **Engine Profile:** High-Fidelity 1080p Video Streaming (Player 2 / Hardware Buffered)  
@@ -22,7 +22,7 @@
 
 ---
 
-## 1. Quick Installation Guide (3-Minute Setup)
+## 1. Quick Installation Guide (3-Minute Setup) ⚡ (•̀ᴗ•́)و ̑̑
 
 For rapid, automated deployment on a fresh Raspberry Pi Zero 2 W running **Raspberry Pi OS Lite (32-bit Bullseye)**, execute the following 3 steps:
 
@@ -133,7 +133,7 @@ cd ~/lazycast_setup/lazycast && ./all.sh
 
 ---
 
-## 2. System Overview and Scope
+## 2. System Overview and Scope 📺 (✿◠‿◠)
 
 ### 2.1 Purpose
 This document defines the formal software engineering specification, subsystem architecture, deployment protocol, and operational procedures for an embedded wireless display sink (receiver) built on the Raspberry Pi Zero 2 W. The system is engineered to provide high-fidelity, artifact-free 1080p Full HD video and audio casting from mobile devices (Android / Samsung Smart View) directly to HDMI-equipped screens.
@@ -173,7 +173,7 @@ This document defines the formal software engineering specification, subsystem a
 
 ---
 
-## 4. System Architecture and Subsystem Decomposition
+## 4. System Architecture and Subsystem Decomposition 🏗️ (ง •_•)ง
 
 ### 4.1 Architectural Decomposition
 
@@ -319,7 +319,7 @@ sequenceDiagram
 
 ---
 
-## 6. Performance Engineering & Quality Optimization Specification
+## 6. Performance Engineering & Quality Optimization Specification 🚀 (★‿★)
 
 ```
 +-------------------------------------------------------------------------+
@@ -356,7 +356,7 @@ sudo iwconfig wlan0 power off
 
 ---
 
-## 7. Operational Manual and Verification Procedures
+## 7. Operational Manual and Verification Procedures 🕹️ (つ✧ω✧)つ
 
 ### 7.1 Service Execution
 Execute the master casting daemon from the terminal:
@@ -385,7 +385,7 @@ Active Interface: p2p-wlan0-0
 
 ---
 
-## 8. Extra UI Feature: Modern 1080p Control Center Dashboard
+## 8. Extra UI Feature: Modern 1080p Control Center Dashboard 🎨 (づ｡◕‿‿◕｡)づ
 
 An optional, hardware-accelerated **1080p Dark Glassmorphism Control Center Dashboard** built with Python and Pygame directly on `/dev/fb0`.
 

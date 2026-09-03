@@ -290,6 +290,27 @@ cd ~/lazycast_setup/lazycast
 
 ## 8. Ekstra UI Özelliği: Modern 1080p Kontrol Merkezi Dashboard
 
+---
+
+
+---
+
+### 📺 Arayüz Karşılaştırması: Modern Dashboard vs. Klasik Menü
+
+| Modern 1080p Pygame Arayüzü (`menu`) | Klasik Hafif TUI Menüsü (`classic-menu`) |
+|:---:|:---:|
+| ![Modern UI](assets/dashboard_tv_screenshot.jpg) | ![Classic UI](assets/classic_tui_screenshot.png) |
+| *40dp kavisli kartlar, canlı donanım takibi, koyu cam efekti ve fare/klavye destekli 1080p modern panel.* | *Düşük kaynak tüketen, hızlı ve pratik ncurses tabanlı klasik metin menüsü.* |
+
+- **Modern Paneli Başlat:** `menu` (veya `sudo python3 scripts/cast_gui.py`)
+- **Klasik Menüyü Başlat:** `classic-menu` (veya `bash scripts/classic_menu.sh`)
+
+
+
+
+*Raspberry Pi Zero 2 W üzerinde çalışan 40dp kavisli kartlar, canlı CPU sıcaklık ve VRAM takibi, Bluetooth ve Wi-Fi yöneticili Koyu Cam Efektli (Dark Glassmorphism) Modern Arayüz.*
+
+
 İsteğe bağlı olarak kullanılabilen, doğrudan `/dev/fb0` üzerine çizilen donanım hızlandırmalı, koyu temalı **1080p Dark Glassmorphism Kontrol Merkezi Dashboard'u** (Python / Pygame):
 
 ```

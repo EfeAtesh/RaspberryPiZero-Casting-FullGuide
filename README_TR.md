@@ -1,4 +1,4 @@
-# Sistem Mimarisi, Gereksinim Şartnamesi ve Kurulum Kılavuzu
+# Sistem Mimarisi, Gereksinim Şartnamesi ve Kurulum Kılavuzu (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧
 ## Kablosuz Ekran Yansıtma Alıcı Sistemi (Miracast / WFD)
 **Hedef Platform:** Raspberry Pi Zero 2 W  
 **Motor Profili:** Yüksek Kaliteli 1080p Video Akışı (Player 2 / Donanımsal Tamponlu)  
@@ -21,7 +21,7 @@
 
 ---
 
-## 1. Hızlı Kurulum Kılavuzu (3 Dakikada Kurulum)
+## 1. Hızlı Kurulum Kılavuzu (3 Dakikada Kurulum) ⚡ (•̀ᴗ•́)و ̑̑
 
 Sıfırdan bir Raspberry Pi Zero 2 W üzerinde **Raspberry Pi OS Lite (32-bit Bullseye)** ile kurulumu 3 dakikada tamamlamak için:
 
@@ -131,7 +131,7 @@ cd ~/lazycast_setup/lazycast && ./all.sh
 
 ---
 
-## 2. Sistem Genel Bakış ve Kapsam
+## 2. Sistem Genel Bakış ve Kapsam 📺 (✿◠‿◠)
 
 ### 2.1 Amaç
 Bu belge, Raspberry Pi Zero 2 W üzerinde çalışan gömülü bir kablosuz ekran alıcısı (sink) sisteminin yazılım mühendisliği gereksinimlerini, mimarisini, kurulum adımlarını ve kullanım prosedürlerini tanımlar. Sistem, Android mobil cihazlardan (Smart View / Miracast) HDMI ekranlara **kristal netliğinde, takılmasız ve pürüzsüz 1080p Full HD video ve ses** aktarımını hedefler.
@@ -164,7 +164,7 @@ Bu belge, Raspberry Pi Zero 2 W üzerinde çalışan gömülü bir kablosuz ekra
 
 ---
 
-## 4. Sistem Mimarisi ve Alt Sistem Ayrıştırması
+## 4. Sistem Mimarisi ve Alt Sistem Ayrıştırması 🏗️ (ง •_•)ง
 
 ```mermaid
 graph TD
@@ -254,7 +254,7 @@ graph TD
 
 ---
 
-## 6. Performans Mühendisliği ve Kalite Optimizasyonu
+## 6. Performans Mühendisliği ve Kalite Optimizasyonu 🚀 (★‿★)
 
 ### 6.1 VRAM Dağılımı (`gpu_mem=256`)
 - **GPU Belleği (256 MB):** 1080p video kare tamponları, çift/üçlü tamponlama ve donanımsal renk uzayı dönüşümü için ayrılmıştır.
@@ -272,7 +272,7 @@ sudo iwconfig wlan0 power off
 
 ---
 
-## 7. Kullanım Kılavuzu ve Doğrulama Prosedürleri
+## 7. Kullanım Kılavuzu ve Doğrulama Prosedürleri 🕹️ (つ✧ω✧)つ
 
 ### 7.1 Alıcıyı Başlatma
 ```bash
@@ -288,7 +288,28 @@ cd ~/lazycast_setup/lazycast
 
 ---
 
-## 8. Ekstra UI Özelliği: Modern 1080p Kontrol Merkezi Dashboard
+## 8. Ekstra UI Özelliği: Modern 1080p Kontrol Merkezi Dashboard 🎨 (づ｡◕‿‿◕｡)づ
+
+---
+
+
+---
+
+### 📺 Arayüz Karşılaştırması: Modern Dashboard vs. Klasik Menü
+
+| Modern 1080p Pygame Arayüzü (`menu`) | Klasik Hafif TUI Menüsü (`classic-menu`) |
+|:---:|:---:|
+| ![Modern UI](assets/dashboard_tv_screenshot.jpg) | ![Classic UI](assets/classic_tui_screenshot.png) |
+| *40dp kavisli kartlar, canlı donanım takibi, koyu cam efekti ve fare/klavye destekli 1080p modern panel.* | *Düşük kaynak tüketen, hızlı ve pratik ncurses tabanlı klasik metin menüsü.* |
+
+- **Modern Paneli Başlat:** `menu` (veya `sudo python3 scripts/cast_gui.py`)
+- **Klasik Menüyü Başlat:** `classic-menu` (veya `bash scripts/classic_menu.sh`)
+
+
+
+
+*Raspberry Pi Zero 2 W üzerinde çalışan 40dp kavisli kartlar, canlı CPU sıcaklık ve VRAM takibi, Bluetooth ve Wi-Fi yöneticili Koyu Cam Efektli (Dark Glassmorphism) Modern Arayüz.*
+
 
 İsteğe bağlı olarak kullanılabilen, doğrudan `/dev/fb0` üzerine çizilen donanım hızlandırmalı, koyu temalı **1080p Dark Glassmorphism Kontrol Merkezi Dashboard'u** (Python / Pygame):
 
