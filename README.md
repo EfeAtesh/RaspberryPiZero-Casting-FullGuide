@@ -390,7 +390,7 @@ Active Interface: p2p-wlan0-0
 ## 8. Extra UI Feature: Modern 1080p Control Center Dashboard 🎨 (づ｡◕‿‿◕｡)づ
 
 ### 📺 Live UI Gallery & Comparison (Modern Dashboard vs. Classic TUI)
-
+Those screenshots are menu screens for pairing for wifi. 
 <p align="center">
   <img src="./assets/dashboard_tv_screenshot.jpg" width="48%" alt="Modern 1080p Pygame UI" />
   <img src="./assets/classic_tui_screenshot.png" width="48%" alt="Classic Lightweight TUI" />
