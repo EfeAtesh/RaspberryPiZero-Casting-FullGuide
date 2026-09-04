@@ -2,12 +2,12 @@
 """
 =============================================================================
 Raspberry Pi Zero 2 W - Wireless Cast Control Center (Apple Monochrome UI)
+With WPA-2 & WPA-2 Enterprise Network Support
 Author: Efe Atesh (Github.com/EfeAtesh)
 =============================================================================
 """
 import os, sys, time, socket, subprocess, re, math
 
-# Framebuffer doğrudan çizim sürücüleri
 os.environ["SDL_VIDEODRIVER"] = "fbcon"
 os.environ["SDL_FBDEV"] = "/dev/fb0"
 
@@ -21,7 +21,6 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
 pygame.display.set_caption("Cast Control Center")
 clock = pygame.time.Clock()
 
-# TrueType / Vektör Fontlar
 FONT_TITLE = pygame.font.Font(None, 68)
 FONT_SUB = pygame.font.Font(None, 28)
 FONT_CARD = pygame.font.Font(None, 34)
@@ -78,7 +77,6 @@ def scan_bt():
     except: pass
     return devices
 
-# 40dp Kavisli Kart Çizici (Apple TV Tarzı)
 def draw_rounded_card(surface, color, rect, radius=40, border_color=(44, 44, 46), border_width=1):
     pygame.draw.circle(surface, color, (rect.left + radius, rect.top + radius), radius)
     pygame.draw.circle(surface, color, (rect.right - radius, rect.top + radius), radius)
@@ -104,11 +102,23 @@ def draw_btn(surface, color, rect, text, radius=20, border_color=None, font=FONT
     txt = font.render(text, True, text_color)
     surface.blit(txt, txt.get_rect(center=rect.center))
 
+def connect_network(ssid, password, identity=""):
+    if "eduroam" in ssid.lower() or identity:
+        block = f'network={{\\n    ssid="{ssid}"\\n    key_mgmt=WPA-EAP\\n    eap=PEAP\\n    identity="{identity}"\\n    password="{password}"\\n    phase2="auth=MSCHAPV2"\\n}}\\n'
+    else:
+        block = f'network={{\\n    ssid="{ssid}"\\n    psk="{password}"\\n}}\\n'
+    cmd = f'printf "{block}" | sudo tee -a /etc/wpa_supplicant/wpa_supplicant.conf && sudo wpa_cli -i wlan0 reconfigure'
+    subprocess.run(cmd, shell=True)
+
 MODAL = None
 WIFI_LIST = []
 BT_LIST = []
 CUR_SSID = ""
 PASS_INPUT = ""
+USER_INPUT = ""
+ACTIVE_FIELD = "USER"
+IS_ENTERPRISE = False
+
 info = get_sys_info()
 running = True
 
@@ -124,13 +134,23 @@ while running:
                 else: running = False
             elif MODAL == "PASS":
                 if e.key == pygame.K_RETURN:
-                    cmd = "sudo wpa_cli -i wlan0 add_network && sudo wpa_cli -i wlan0 set_network 0 ssid '\"" + str(CUR_SSID) + "\"' && sudo wpa_cli -i wlan0 set_network 0 psk '\"" + str(PASS_INPUT) + "\"' && sudo wpa_cli -i wlan0 enable_network 0 && sudo wpa_cli -i wlan0 save_config"
-                    subprocess.run(cmd, shell=True)
+                    connect_network(CUR_SSID, PASS_INPUT, USER_INPUT if IS_ENTERPRISE else "")
                     MODAL = None
-                elif e.key == pygame.K_BACKSPACE: PASS_INPUT = PASS_INPUT[:-1]
-                elif e.unicode.isprintable(): PASS_INPUT += e.unicode
+                elif e.key == pygame.K_TAB:
+                    if IS_ENTERPRISE:
+                        ACTIVE_FIELD = "PASS" if ACTIVE_FIELD == "USER" else "USER"
+                elif e.key == pygame.K_BACKSPACE:
+                    if IS_ENTERPRISE and ACTIVE_FIELD == "USER":
+                        USER_INPUT = USER_INPUT[:-1]
+                    else:
+                        PASS_INPUT = PASS_INPUT[:-1]
+                elif e.unicode.isprintable():
+                    if IS_ENTERPRISE and ACTIVE_FIELD == "USER":
+                        USER_INPUT += e.unicode
+                    else:
+                        PASS_INPUT += e.unicode
 
-    # 1. Saf Derin Siyah Arka Plan (OLED Black)
+    # 1. Saf Derin Siyah Zemin
     screen.fill((0, 0, 0))
 
     # Üst Saat ve "Change Language" Butonu
@@ -149,16 +169,16 @@ while running:
     sub = FONT_SUB.render("Cihaz/Device " + str(info['host']) + "   |   PIN 31415926   |  Burada USB Mouse kullanabilirsiniz, aparatla takmak gerekebilir. / You can use USB Mouse here, you may need to use an adapter.", True, (161, 161, 166))
     screen.blit(sub, sub.get_rect(center=(WIDTH//2, 155)))
 
-    # 3 Modern 40dp Titanyum Kart (#121214)
+    # 3 Modern 40dp Titanyum Kart
     cw, ch = 520, 460
     start_x = (WIDTH - (cw*3 + 120)) // 2
 
-    # Kart 1: Wi-Fi
+    # Kart 1: Wi-Fi (WPA-2)
     c1 = pygame.Rect(start_x, 230, cw, ch)
     c1_hover = c1.collidepoint(mpos)
     draw_rounded_card(screen, (18, 18, 20), c1, radius=40, border_color=(72, 72, 74) if c1_hover else (44, 44, 46), border_width=2 if c1_hover else 1)
     
-    screen.blit(FONT_CARD.render("Wi-Fi", True, (255, 255, 255)), (start_x+40, 265))
+    screen.blit(FONT_CARD.render("Wi-Fi (WPA-2)", True, (255, 255, 255)), (start_x+40, 265))
     screen.blit(FONT_TEXT.render("Ag / Network:", True, (161, 161, 166)), (start_x+40, 335))
     screen.blit(FONT_CARD.render(info["wifi"][:22], True, (255, 255, 255)), (start_x+40, 370))
     screen.blit(FONT_TEXT.render("IP:", True, (161, 161, 166)), (start_x+40, 440))
@@ -171,7 +191,7 @@ while running:
         WIFI_LIST = scan_wifi()
         MODAL = "WIFI"
 
-    # Kart 2: Bluetooth (Manuel Tarama)
+    # Kart 2: Bluetooth
     c2 = pygame.Rect(start_x + cw + 60, 230, cw, ch)
     c2_hover = c2.collidepoint(mpos)
     draw_rounded_card(screen, (18, 18, 20), c2, radius=40, border_color=(72, 72, 74) if c2_hover else (44, 44, 46), border_width=2 if c2_hover else 1)
@@ -206,7 +226,7 @@ while running:
     if any(e.type == pygame.MOUSEBUTTONDOWN and btn_r_hover for e in events):
         subprocess.run("sudo reboot", shell=True)
 
-    # Alt Buton: Yayına Başla (Apple Minimalist Pill)
+    # Alt Buton: Yayına Başla
     btn_start = pygame.Rect(WIDTH//2 - 270, HEIGHT - 180, 540, 72)
     btn_start_hover = btn_start.collidepoint(mpos)
     draw_btn(screen, (245, 245, 247) if btn_start_hover else (225, 225, 230), btn_start, "YAYINA BASLA (START CAST)", radius=36, text_color=(0, 0, 0))
@@ -236,22 +256,46 @@ while running:
             for idx, s in enumerate(WIFI_LIST[:6]):
                 ir = pygame.Rect(mbox.x+50, mbox.top+95+idx*72, mbox.w-100, 58)
                 ir_hover = ir.collidepoint(mpos)
-                draw_btn(screen, (44, 44, 46) if ir_hover else (28, 28, 30), ir, s, radius=18, border_color=(58, 58, 60))
+                is_edu = "eduroam" in s.lower()
+                label = f"{s}  [WPA-2 Enterprise]" if is_edu else f"{s}  [WPA-2]"
+                draw_btn(screen, (44, 44, 46) if ir_hover else (28, 28, 30), ir, label, radius=18, border_color=(58, 58, 60))
                 if any(e.type == pygame.MOUSEBUTTONDOWN and ir_hover for e in events):
                     CUR_SSID = s
                     PASS_INPUT = ""
+                    USER_INPUT = ""
+                    IS_ENTERPRISE = is_edu
+                    ACTIVE_FIELD = "USER" if IS_ENTERPRISE else "PASS"
                     MODAL = "PASS"
 
         elif MODAL == "PASS":
-            screen.blit(FONT_CARD.render("[" + str(CUR_SSID) + "] Sifresi:", True, (255, 255, 255)), (mbox.x+50, mbox.top+45))
-            inpr = pygame.Rect(mbox.x+50, mbox.top+180, mbox.w-100, 64)
-            draw_rounded_card(screen, (28, 28, 30), inpr, radius=20, border_color=(72, 72, 74), border_width=2)
-            pmask = "*"*len(PASS_INPUT)
-            screen.blit(FONT_CARD.render(pmask if pmask else "Klavyeyle sifreyi yazip Enter'a basin / Type password & Enter", True, (255, 255, 255) if pmask else (134, 134, 139)), (inpr.x+25, inpr.y+18))
+            if IS_ENTERPRISE:
+                screen.blit(FONT_CARD.render(f"[{CUR_SSID}] WPA-2 Enterprise", True, (255, 255, 255)), (mbox.x+50, mbox.top+35))
+                screen.blit(FONT_TEXT.render("1. Kullanici Adi / Identity (E-posta / ID):", True, (161, 161, 166)), (mbox.x+50, mbox.top+90))
+                u_rect = pygame.Rect(mbox.x+50, mbox.top+125, mbox.w-100, 56)
+                u_active = (ACTIVE_FIELD == "USER")
+                draw_rounded_card(screen, (28, 28, 30), u_rect, radius=16, border_color=(245, 245, 247) if u_active else (58, 58, 60), border_width=2 if u_active else 1)
+                screen.blit(FONT_TEXT.render(USER_INPUT if USER_INPUT else "kullanici@kurum.edu.tr", True, (255, 255, 255) if USER_INPUT else (100, 100, 100)), (u_rect.x+20, u_rect.y+16))
+
+                screen.blit(FONT_TEXT.render("2. Sifre / Password:", True, (161, 161, 166)), (mbox.x+50, mbox.top+205))
+                p_rect = pygame.Rect(mbox.x+50, mbox.top+240, mbox.w-100, 56)
+                p_active = (ACTIVE_FIELD == "PASS")
+                draw_rounded_card(screen, (28, 28, 30), p_rect, radius=16, border_color=(245, 245, 247) if p_active else (58, 58, 60), border_width=2 if p_active else 1)
+                pmask = "*" * len(PASS_INPUT)
+                screen.blit(FONT_TEXT.render(pmask if pmask else "Sifrenizi girin...", True, (255, 255, 255) if pmask else (100, 100, 100)), (p_rect.x+20, p_rect.y+16))
+
+                screen.blit(FONT_TEXT.render("Gecis: TAB / Mouse  |  Baglan: ENTER", True, (134, 134, 139)), (mbox.x+50, mbox.top+320))
+                if any(e.type == pygame.MOUSEBUTTONDOWN and u_rect.collidepoint(mpos) for e in events): ACTIVE_FIELD = "USER"
+                if any(e.type == pygame.MOUSEBUTTONDOWN and p_rect.collidepoint(mpos) for e in events): ACTIVE_FIELD = "PASS"
+            else:
+                screen.blit(FONT_CARD.render(f"[{CUR_SSID}] Sifresi:", True, (255, 255, 255)), (mbox.x+50, mbox.top+45))
+                inpr = pygame.Rect(mbox.x+50, mbox.top+180, mbox.w-100, 64)
+                draw_rounded_card(screen, (28, 28, 30), inpr, radius=20, border_color=(72, 72, 74), border_width=2)
+                pmask = "*"*len(PASS_INPUT)
+                screen.blit(FONT_CARD.render(pmask if pmask else "Klavyeyle sifreyi yazip Enter'a basin...", True, (255, 255, 255) if pmask else (134, 134, 139)), (inpr.x+25, inpr.y+18))
 
         elif MODAL == "BT":
             screen.blit(FONT_CARD.render("Bulunan Bluetooth Cihazlar / Found Bluetooth Devices", True, (255, 255, 255)), (mbox.x+50, mbox.top+35))
-            if not BT_LIST: screen.blit(FONT_TEXT.render("Cihaz bulunamadi. Klavyenizi eslestirme moduna alin / No devices found. Turn on pairing mode.", True, (161, 161, 166)), (mbox.x+50, mbox.top+120))
+            if not BT_LIST: screen.blit(FONT_TEXT.render("Cihaz bulunamadi. Klavyenizi eslestirme moduna alin / No devices found.", True, (161, 161, 166)), (mbox.x+50, mbox.top+120))
             for idx, (mac, name) in enumerate(BT_LIST[:5]):
                 ir = pygame.Rect(mbox.x+50, mbox.top+95+idx*82, mbox.w-100, 68)
                 draw_rounded_card(screen, (28, 28, 30), ir, radius=20, border_color=(58, 58, 60))
